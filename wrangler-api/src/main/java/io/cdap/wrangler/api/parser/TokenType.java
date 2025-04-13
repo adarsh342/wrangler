@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2019 Cask Data, Inc.
+ * Copyright Â© 2017-2019 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,6 +40,10 @@ import java.io.Serializable;
  * @see Expression
  * @see Text
  * @see TextList
+ * @see ByteSize
+ * @see ByteSizeList
+ * @see TimeDuration
+ * @see TimeDurationList
  */
 @PublicEvolving
 public enum TokenType implements Serializable {
@@ -152,5 +156,39 @@ public enum TokenType implements Serializable {
    * Represents the enumerated type for the object of type {@code String} with restrictions
    * on characters that can be present in a string.
    */
-  IDENTIFIER
+  IDENTIFIER,
+  
+  /**
+   * Represents the enumerated type for the object of type {@code ByteSize}.
+   * This type is associated with tokens that represent byte sizes with units such as
+   * B, KB, MB, GB, TB, or PB. E.g. "150MB", "1.5GB"
+   */
+  BYTE_SIZE,
+
+  /**
+   * Represents the enumerated type for the object of type {@code TimeDuration}.
+   * This type is associated with tokens that represent time durations with units such as
+   * ms, s, m, h, or d. E.g. "150ms", "2.5s"
+   */
+  TIME_DURATION,
+  
+  /**
+   * Represents the enumerated type for the object of type {@code ByteSizeList}.
+   * This type is associated with a collection of {@code ByteSize} values separated by
+   * comma(,). E.g.
+   * <code>
+   *   ByteSize[,ByteSize]*
+   * </code>
+   */
+  BYTE_SIZE_LIST,
+  
+  /**
+   * Represents the enumerated type for the object of type {@code TimeDurationList}.
+   * This type is associated with a collection of {@code TimeDuration} values separated by
+   * comma(,). E.g.
+   * <code>
+   *   TimeDuration[,TimeDuration]*
+   * </code>
+   */
+  TIME_DURATION_LIST
 }
