@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2019 Cask Data, Inc.
+ * Copyright Â© 2017-2019 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ options {
 
 @lexer::header {
 /*
- * Copyright © 2017-2019 Cask Data, Inc.
+ * Copyright Â© 2017-2019 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -57,6 +57,8 @@ directive
     | text
     | number
     | bool
+    | byteSize
+    | timeDuration
     | column
     | colList
     | numberList
@@ -140,7 +142,7 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | ByteSize | TimeDuration
  ;
 
 ecommand
@@ -165,6 +167,14 @@ number
 
 bool
  : Bool
+ ;
+
+byteSize
+ : ByteSize
+ ;
+
+timeDuration
+ : TimeDuration
  ;
 
 condition
@@ -310,4 +320,20 @@ fragment Int
 
 fragment Digit
  : [0-9]
+ ;
+
+ByteSize
+ : Int ('.' Digit*)? ByteUnit
+ ;
+
+fragment ByteUnit
+ : [kKmMgGtTpP]?[bB]
+ ;
+
+TimeDuration
+ : Int ('.' Digit*)? TimeUnit
+ ;
+
+fragment TimeUnit
+ : 'ms' | 's' | 'm' | 'h' | 'd'
  ;
