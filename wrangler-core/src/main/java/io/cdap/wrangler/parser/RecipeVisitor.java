@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2019 Cask Data, Inc.
+ * Copyright Â© 2017-2019 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,6 +34,10 @@ import io.cdap.wrangler.api.parser.Ranges;
 import io.cdap.wrangler.api.parser.Text;
 import io.cdap.wrangler.api.parser.TextList;
 import io.cdap.wrangler.api.parser.Token;
+import io.cdap.wrangler.api.parser.ByteSize;
+import io.cdap.wrangler.api.parser.ByteSizeList;
+import io.cdap.wrangler.api.parser.TimeDuration;
+import io.cdap.wrangler.api.parser.TimeDurationList;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -228,6 +232,26 @@ public final class RecipeVisitor extends DirectivesBaseVisitor<RecipeSymbol.Buil
     builder.addToken(new Bool(Boolean.valueOf(ctx.Bool().getText())));
     return builder;
   }
+  
+  /**
+   * A Directive can consist of a ByteSize field. This visitor method extracts the
+   * byte size value with its unit and creates a token type {@code ByteSize}.
+   */
+  @Override
+  public RecipeSymbol.Builder visitByteSize(DirectivesParser.ByteSizeContext ctx) {
+    builder.addToken(new io.cdap.wrangler.api.parser.ByteSize(ctx.ByteSize().getText()));
+    return builder;
+  }
+  
+  /**
+   * A Directive can consist of a TimeDuration field. This visitor method extracts the
+   * time duration value with its unit and creates a token type {@code TimeDuration}.
+   */
+  @Override
+  public RecipeSymbol.Builder visitTimeDuration(DirectivesParser.TimeDurationContext ctx) {
+    builder.addToken(new io.cdap.wrangler.api.parser.TimeDuration(ctx.TimeDuration().getText()));
+    return builder;
+  }
 
   /**
    * A Directive can include a expression or a condition to be evaluated. When
@@ -314,6 +338,36 @@ public final class RecipeVisitor extends DirectivesBaseVisitor<RecipeSymbol.Buil
       strs.add(text.substring(1, text.length() - 1));
     }
     builder.addToken(new TextList(strs));
+    return builder;
+  }
+  
+  /**
+   * This visitor method extracts the list of byte sizes specified. It creates a token
+   * type {@code ByteSizeList} to be added to {@code TokenGroup}.
+   */
+  @Override
+  public RecipeSymbol.Builder visitByteSizeList(DirectivesParser.ByteSizeListContext ctx) {
+    List<TerminalNode> byteSizes = ctx.ByteSize();
+    List<io.cdap.wrangler.api.parser.ByteSize> bytesList = new ArrayList<>();
+    for (TerminalNode byteSize : byteSizes) {
+      bytesList.add(new io.cdap.wrangler.api.parser.ByteSize(byteSize.getText()));
+    }
+    builder.addToken(new io.cdap.wrangler.api.parser.ByteSizeList(bytesList));
+    return builder;
+  }
+  
+  /**
+   * This visitor method extracts the list of time durations specified. It creates a token
+   * type {@code TimeDurationList} to be added to {@code TokenGroup}.
+   */
+  @Override
+  public RecipeSymbol.Builder visitTimeDurationList(DirectivesParser.TimeDurationListContext ctx) {
+    List<TerminalNode> timeDurations = ctx.TimeDuration();
+    List<io.cdap.wrangler.api.parser.TimeDuration> durationsList = new ArrayList<>();
+    for (TerminalNode timeDuration : timeDurations) {
+      durationsList.add(new io.cdap.wrangler.api.parser.TimeDuration(timeDuration.getText()));
+    }
+    builder.addToken(new io.cdap.wrangler.api.parser.TimeDurationList(durationsList));
     return builder;
   }
 
